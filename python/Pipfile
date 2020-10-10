@@ -6,10 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-smallerize = "*"
-pandas = "*"
-matplotlib = "*"
-seaborn = "*"
+sqlalchemy = "*"
+psycopg2 = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"
