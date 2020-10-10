@@ -1,10 +1,27 @@
+#!/usr/bin/env Rscript
+library(renv)
 library(Minirand)
 library(dotenv)
 library(DBI)
-library(renv)
+library(argparser)
 
 # renv::init()
 # renv::restore()
+
+p <- arg_parser("The Sorting Hat")
+# Add a positional argument
+p <- add_argument(p, "--orientation", 
+                  help="Name of the person to sort", default=7)
+# Add a flag
+p <- add_argument(p, "--gender", 
+                  help="enable debug mode", default=7)
+# Add another flag
+p <- add_argument(p, "--partnership",
+                  help="output only the house", default=7)
+# Add another flag
+p <- add_argument(p, "--health",
+                  help="output only the house", default=7)
+argv <- parse_args(p)
 
 # connect to database
 # if you get "incomplete final line found" add \n as the last line
@@ -42,25 +59,37 @@ ratio <- c(3, 3, 2, 2)
 covwt <- c(1/4, 1/4, 1/4, 1/4) 
 
 # input
-cov_new <- c(0, 2, 1, 1) 
-cov_new <- rbind(c(0, 2, 1, 1))
-colnames(cov_new) = c("orientation", "gender", "partnership", "health") 
+#argv <- parse_args(p, c("--orientation", "3",
+#                        "--gender", "3", 
+#                        "--partnership", "3", 
+#                        "--health", "3"))
+# ./arm_assigment.R --orientation 2 --gender 3 --partnership 2 --health 1
 
-cov_final <- rbind(covmat, cov_new)
+cov_df <- data.frame(orientation=argv$orientation, 
+                      gender=argv$gender, 
+                      partnership=argv$partnership, 
+                      health=argv$health)
+
+cov_final <- rbind(covmat, cov_df)
 
 if (dim(res)[1] == 0)
-{  } else {
-res_assig <- Minirand(covmat=cov_final, 
+{ res_assig <- 4 } else {
+res_assig <- Minirand(covmat=data.matrix(cov_final), 
                       nsample,
                       covwt=covwt,
                       ratio=ratio, 
                       ntrt=ntrt, 
                       trtseq=trtseq, 
                       method="Range", 
-                      result=res, 
+                      result=data.matrix(res), 
                       p = 0.9)
 }
 
+dbWriteTable(con, 
+             "arm_assigment", 
+             data.frame(cov_df, 
+                        arm=res_assig), 
+             append = TRUE)
 
 dbDisconnect(con)
 # renv::snapshot()
