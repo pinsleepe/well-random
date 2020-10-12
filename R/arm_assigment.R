@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-library(renv)
+# library(renv)
 library(Minirand)
 library(dotenv)
 library(DBI)
@@ -93,3 +93,4 @@ dbWriteTable(con,
 
 dbDisconnect(con)
 # renv::snapshot()
+cat(res_assig)
