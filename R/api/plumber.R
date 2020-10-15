@@ -1,28 +1,17 @@
 #!/usr/bin/env Rscript
-# library(renv)
+
 library(Minirand)
 library(dotenv)
 library(DBI)
 library(argparser)
+library(sodium)
+library(plumber)
 
-# renv::init()
-# renv::restore()
+# curl -X POST "http://localhost:8787/p/af16c9bd/arm?orientation=2&gender=2&partnership=1&health=2" -H  "accept: */*" -d ""
 
-p <- arg_parser("The Sorting Hat")
-# Add a positional argument
-p <- add_argument(p, "--orientation", 
-                  help="Name of the person to sort", default=7)
-# Add a flag
-p <- add_argument(p, "--gender", 
-                  help="enable debug mode", default=7)
-# Add another flag
-p <- add_argument(p, "--partnership",
-                  help="output only the house", default=7)
-# Add another flag
-p <- add_argument(p, "--health",
-                  help="output only the house", default=7)
-argv <- parse_args(p)
-
+#* Return arm allocation
+#* @post /arm
+function(orientation=100, gender=100, partnership=100, health=100){
 # connect to database
 # if you get "incomplete final line found" add \n as the last line
 load_dot_env(file = "/home/mono/projects/python/prk/well-random/R/.env")
@@ -58,17 +47,10 @@ ratio <- c(3, 3, 2, 2)
 # equal weights
 covwt <- c(1/4, 1/4, 1/4, 1/4) 
 
-# input
-#argv <- parse_args(p, c("--orientation", "3",
-#                        "--gender", "3", 
-#                        "--partnership", "3", 
-#                        "--health", "3"))
-# ./arm_assigment.R --orientation 2 --gender 3 --partnership 2 --health 1
-
-cov_df <- data.frame(orientation=argv$orientation, 
-                      gender=argv$gender, 
-                      partnership=argv$partnership, 
-                      health=argv$health)
+cov_df <- data.frame(orientation=orientation, 
+                      gender=gender, 
+                      partnership=partnership, 
+                      health=health)
 
 cov_final <- rbind(covmat, cov_df)
 
@@ -92,5 +74,6 @@ dbWriteTable(con,
              append = TRUE)
 
 dbDisconnect(con)
-# renv::snapshot()
-cat(res_assig)
+output = res_assig
+return(output)
+}
