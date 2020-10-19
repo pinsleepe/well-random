@@ -4,7 +4,7 @@ FROM rstudio/plumber
 WORKDIR /code/
 RUN apt-get update && apt-get -y install python3-pip
 RUN pip3 install pipenv
-COPY ./python /code/
+COPY python /code/
 RUN pipenv --python 3 install
 
 # Install R dependencies
@@ -15,7 +15,7 @@ RUN R -e "install.packages('argparser',dependencies=TRUE, repos='http://cran.rst
 RUN R -e "install.packages('sodium',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('plumber',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
-COPY R/* /usr/local/src/myscripts/
+COPY R /code/
 COPY ./entrypoint.sh /code/
 
 ENTRYPOINT ["/code/entrypoint.sh"]
