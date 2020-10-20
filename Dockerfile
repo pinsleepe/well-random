@@ -11,7 +11,6 @@ RUN pipenv --python 3 install
 RUN R -e "install.packages('Minirand',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('dotenv',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('DBI',dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('argparser',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('sodium',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('plumber',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
