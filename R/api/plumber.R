@@ -18,7 +18,6 @@ function(orientation = 100, gender = 100, partnership = 100, health = 100) {
     load_dot_env(file = ".env")
   }
   db <- Sys.getenv("POSTGRES_NAME")
-  db <- Sys.getenv("POSTGRES_NAME")
   host_db <- Sys.getenv("POSTGRES_HOST")
   db_port <- Sys.getenv("POSTGRES_PORT")
   db_user <- Sys.getenv("POSTGRES_USER")
@@ -43,7 +42,7 @@ function(orientation = 100, gender = 100, partnership = 100, health = 100) {
   res <- dbFetch(res_query)
   dbClearResult(res_query)
 
-  # set trail variables
+  # set trial variables
   ntrt <- 4
   nsample <- dim(res)[1] + 1
   trtseq <- c(1, 2, 3, 4)
